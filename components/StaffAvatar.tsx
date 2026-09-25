@@ -12,6 +12,14 @@ const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_URL
  * belum diupload untuk NIK tersebut, otomatis jatuh ke lingkaran inisial
  * supaya layout tidak rusak menampilkan gambar rusak di TV.
  */
+// Supabase Storage (dan browser) meng-cache foto berdasarkan URL. Tanpa ini,
+// mengganti foto yang sudah pernah tampil bisa butuh sampai ~1 jam sebelum
+// versi barunya muncul. Menyertakan penanda waktu yang berubah tiap 15 menit
+// memaksa pengambilan ulang secara berkala tanpa harus hard-refresh manual.
+function cacheBust(): number {
+  return Math.floor(Date.now() / (15 * 60 * 1000));
+}
+
 export function StaffAvatar({ nik, name, size = 36 }: { nik: number; name: string; size?: number }) {
   const [broken, setBroken] = useState(!BUCKET);
 
@@ -28,7 +36,7 @@ export function StaffAvatar({ nik, name, size = 36 }: { nik: number; name: strin
 
   return (
     <Image
-      src={`${BUCKET}/${nik}.jpg`}
+      src={`${BUCKET}/${nik}.jpg?v=${cacheBust()}`}
       alt={name}
       width={size}
       height={size}
