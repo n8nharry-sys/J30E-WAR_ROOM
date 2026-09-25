@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #eef2f7;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  background: var(--bg);
+  color: #0f1b33;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+}
+
+@layer components {
+  .card {
+    @apply bg-white border border-line rounded-card p-3.5 shadow-sm;
+  }
+  .h {
+    @apply font-extrabold text-[11px] tracking-wide uppercase text-mut mb-2;
+  }
+  .lbl {
+    @apply text-mut text-[11px];
+  }
+  .live {
+    @apply bg-bad text-white font-extrabold px-3.5 py-1.5 rounded-full flex items-center gap-1.5;
+  }
+  .live::before {
+    content: '';
+    @apply w-2 h-2 bg-white rounded-full;
+    animation: livepulse 1.2s infinite;
+  }
+}
+
+@keyframes livepulse {
+  50% { opacity: 0.2; }
+}
+@keyframes ticker {
+  to { transform: translateX(-100%); }
+}
+@keyframes pop {
+  from { transform: scale(0.85) translateY(30px); opacity: 0; }
+}
