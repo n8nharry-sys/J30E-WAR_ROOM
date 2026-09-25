@@ -234,12 +234,15 @@ function syncAll() {
     Logger.log('Sync sebelumnya masih berjalan, lewati giliran ini.');
     return;
   }
+  // Urutan ini penting: 'employee' harus lebih dulu karena dept.pic_nik dan
+  // kpi_mtd.nik punya foreign key ke employees.nik. Kalau urutannya terbalik,
+  // Supabase menolak SELURUH batch dept/kpi_mtd (bukan cuma baris yang error).
   const jobs = [
+    ['employee', syncEmployee_],
     ['store_today', syncStoreToday_],
     ['dept', syncDept_],
     ['smt_today', syncSmtToday_],
     ['kpi_mtd', syncKpiMtd_],
-    ['employee', syncEmployee_],
     ['target_harian', syncTargetHarian_],
     ['running_text', syncRunningText_],
   ];

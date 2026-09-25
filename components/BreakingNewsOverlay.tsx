@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { supabaseBrowser } from '@/lib/supabase/client';
 import { BreakingEvent } from '@/lib/types';
 import { rp } from '@/lib/format';
@@ -8,6 +8,45 @@ import { StaffAvatar } from './StaffAvatar';
 import { playCheer } from '@/lib/audio/cheer';
 
 const CARD_LABEL: Record<string, string> = { SALES: 'PENJUALAN', FURNIPRO: 'FURNIPRO', COMSER: 'COMSER' };
+const CONFETTI_COLORS = ['#fbbf24', '#e5484d', '#60a5fa', '#34d399', '#a78bfa'];
+
+/** Serpihan confetti jatuh, dibuat ulang tiap event baru (key = eventId). */
+function Confetti({ eventId }: { eventId: number }) {
+  const pieces = useMemo(
+    () =>
+      Array.from({ length: 46 }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        delay: Math.random() * 0.5,
+        duration: 2.2 + Math.random() * 1.6,
+        color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+        rotate: Math.random() * 360,
+        width: 5 + Math.random() * 4,
+      })),
+    [eventId]
+  );
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {pieces.map((p) => (
+        <span
+          key={p.id}
+          style={{
+            position: 'absolute',
+            top: -16,
+            left: `${p.left}%`,
+            width: p.width,
+            height: p.width * 1.8,
+            background: p.color,
+            opacity: 0.9,
+            transform: `rotate(${p.rotate}deg)`,
+            animation: `confetti-fall ${p.duration}s ${p.delay}s ease-in forwards`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 /**
  * Mendengarkan tabel breaking_events lewat Supabase Realtime. Baik event
@@ -58,7 +97,8 @@ export function BreakingNewsOverlay() {
         style={{ background: 'radial-gradient(120% 140% at 20% 0, #1e40af, #0b1230 70%)', border: '1px solid #3b5bdb' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="absolute right-3 top-3 bg-white/15 rounded-full px-2.5 py-1 text-sm" onClick={() => setEvent(null)}>
+        <Confetti eventId={event.id} />
+        <button className="absolute right-3 top-3 bg-white/15 rounded-full px-2.5 py-1 text-sm z-10" onClick={() => setEvent(null)}>
           ✕
         </button>
         <div className="flex justify-between items-center gap-2 flex-wrap">

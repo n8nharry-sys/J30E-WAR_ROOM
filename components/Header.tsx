@@ -25,7 +25,7 @@ export function Header() {
     <header className="card grid grid-cols-3 items-center gap-3">
       <div>
         {/* Ganti /public/logo-informa.png dengan file logo resmi Informa x Java Mall */}
-        <Image src="/logo-informa.png" alt="Informa Java Mall" width={220} height={64} priority />
+        <Image src="/logo-informa.png" alt="Informa Java Mall" width={220} height={66} priority />
       </div>
       <div className="text-center">
         <h1 className="text-3xl font-black tracking-tight">

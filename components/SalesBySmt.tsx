@@ -1,41 +1,42 @@
 import { KpiRank } from '@/lib/types';
 import { rp, pct, gapClass, achvClass } from '@/lib/format';
-import { RotatingTable } from './RotatingTable';
+import { RollingList } from './RollingList';
 
 const PILL = { g: 'bg-green-100 text-green-800', o: 'bg-amber-100 text-amber-800', r: 'bg-red-100 text-red-800' };
+const COLS = 'grid-cols-[1.6rem_1fr_5.5rem_4rem_5.5rem]';
 
 export function SalesBySmt({ data }: { data: KpiRank[] }) {
   const rows = [...data].sort((a, b) => (b.achv ?? 0) - (a.achv ?? 0));
 
   return (
-    <div className="card">
-      <div className="h">Sales by SMT (MTD)</div>
-      <RotatingTable
-        rows={rows}
-        keyOf={(r) => r.nik}
-        renderHeader={() => (
-          <tr className="text-mut text-[10px] uppercase font-bold">
-            <th className="text-left py-1 w-6">#</th>
-            <th className="text-left py-1">SMT</th>
-            <th className="text-right py-1">Sales MTD</th>
-            <th className="text-right py-1">%</th>
-            <th className="text-right py-1">Gap</th>
-          </tr>
-        )}
-        renderRow={(r, i) => (
-          <>
-            <td className="py-1.5">{i + 1}</td>
-            <td className="py-1.5">{r.nama}</td>
-            <td className="text-right py-1.5">{rp(r.actual)}</td>
-            <td className="text-right py-1.5">
-              <span className={`px-2 py-0.5 rounded-full font-bold text-[11px] ${PILL[achvClass(r.achv)]}`}>
-                {pct(r.achv)}
+    <div className="card h-full flex flex-col">
+      <div className="h shrink-0">Sales by SMT (MTD)</div>
+      <div className={`grid ${COLS} gap-2 text-[10px] uppercase font-bold text-mut px-0.5 pb-1 shrink-0`}>
+        <span>#</span>
+        <span>SMT</span>
+        <span className="text-right">Sales MTD</span>
+        <span className="text-right">%</span>
+        <span className="text-right">Gap</span>
+      </div>
+      <div className="flex-1 min-h-0">
+        <RollingList
+          rows={rows}
+          keyOf={(r) => r.nik}
+          renderRow={(r, i) => (
+            <div className={`grid ${COLS} gap-2 items-center w-full text-sm`}>
+              <span className="text-mut">{i + 1}</span>
+              <span className="truncate">{r.nama}</span>
+              <span className="text-right font-semibold">{rp(r.actual)}</span>
+              <span className="text-right">
+                <span className={`px-1.5 py-0.5 rounded-full font-bold text-[10px] ${PILL[achvClass(r.achv)]}`}>
+                  {pct(r.achv)}
+                </span>
               </span>
-            </td>
-            <td className={`text-right py-1.5 font-bold ${gapClass(r.gap)}`}>{rp(r.gap)}</td>
-          </>
-        )}
-      />
+              <span className={`text-right font-bold text-xs ${gapClass(r.gap)}`}>{rp(r.gap)}</span>
+            </div>
+          )}
+        />
+      </div>
     </div>
   );
 }

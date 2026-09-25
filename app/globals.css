@@ -8,6 +8,16 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Dashboard dirancang untuk 1 layar penuh (TV) tanpa scroll — semua tinggi
+   dihitung relatif terhadap 100dvh (dynamic viewport height), bukan
+   dokumen yang mengalir bebas. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 body {
   background: var(--bg);
   color: #0f1b33;
@@ -43,4 +53,7 @@ body {
 }
 @keyframes pop {
   from { transform: scale(0.85) translateY(30px); opacity: 0; }
+}
+@keyframes confetti-fall {
+  to { transform: translateY(520px) rotate(540deg); opacity: 0; }
 }

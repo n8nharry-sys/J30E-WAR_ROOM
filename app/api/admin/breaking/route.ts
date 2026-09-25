@@ -4,7 +4,7 @@ import { isAdmin } from '@/lib/adminAuth';
 
 // GET: daftar event pending untuk ditinjau di halaman admin.
 export async function GET() {
-  if (!isAdmin()) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  if (!(await isAdmin())) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   const { data, error } = await supabaseAdmin
     .from('breaking_events')
     .select('*, employees(nama)')
@@ -18,7 +18,7 @@ export async function GET() {
 // tinjauan admin memakai tombol approve yang sama, sesuai permintaan
 // Harry ("dapat dilakukan melalui input manual sebelum ditampilkan").
 export async function POST(req: NextRequest) {
-  if (!isAdmin()) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  if (!(await isAdmin())) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   const body = await req.json();
   const { nik, kategori, sub_judul, pesan, sales_today, furnipro_today, comser_today } = body;
 

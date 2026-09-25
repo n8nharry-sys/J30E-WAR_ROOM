@@ -1,8 +1,9 @@
 import { DeptToday } from '@/lib/types';
 import { rp, pct, gapClass, achvClass } from '@/lib/format';
-import { RotatingTable } from './RotatingTable';
+import { RollingList } from './RollingList';
 
 const PILL = { g: 'bg-green-100 text-green-800', o: 'bg-amber-100 text-amber-800', r: 'bg-red-100 text-red-800' };
+const COLS = 'grid-cols-[1fr_5.5rem_4rem_5.5rem]';
 
 export function AchievementDept({ data }: { data: DeptToday[] }) {
   // AJ / AL (kode non-departemen, target 0) dilewati supaya tidak
@@ -12,32 +13,32 @@ export function AchievementDept({ data }: { data: DeptToday[] }) {
     .sort((a, b) => (b.achv_today ?? 0) - (a.achv_today ?? 0));
 
   return (
-    <div className="card">
-      <div className="h">Achievement Dept Today</div>
-      <RotatingTable
-        rows={rows}
-        keyOf={(r) => r.kode_dept}
-        renderHeader={() => (
-          <tr className="text-mut text-[10px] uppercase font-bold">
-            <th className="text-left py-1">Departemen</th>
-            <th className="text-right py-1">Sales</th>
-            <th className="text-right py-1">Achv</th>
-            <th className="text-right py-1">Gap</th>
-          </tr>
-        )}
-        renderRow={(d) => (
-          <>
-            <td className="py-1.5">{d.nama_dept}</td>
-            <td className="text-right py-1.5">{rp(d.sales_today)}</td>
-            <td className="text-right py-1.5">
-              <span className={`px-2 py-0.5 rounded-full font-bold text-[11px] ${PILL[achvClass(d.achv_today)]}`}>
-                {pct(d.achv_today)}
+    <div className="card h-full flex flex-col">
+      <div className="h shrink-0">Achievement Dept Today</div>
+      <div className={`grid ${COLS} gap-2 text-[10px] uppercase font-bold text-mut px-0.5 pb-1 shrink-0`}>
+        <span>Departemen</span>
+        <span className="text-right">Sales</span>
+        <span className="text-right">Achv</span>
+        <span className="text-right">Gap</span>
+      </div>
+      <div className="flex-1 min-h-0">
+        <RollingList
+          rows={rows}
+          keyOf={(r) => r.kode_dept}
+          renderRow={(d) => (
+            <div className={`grid ${COLS} gap-2 items-center w-full text-sm`}>
+              <span className="truncate">{d.nama_dept}</span>
+              <span className="text-right font-semibold">{rp(d.sales_today)}</span>
+              <span className="text-right">
+                <span className={`px-1.5 py-0.5 rounded-full font-bold text-[10px] ${PILL[achvClass(d.achv_today)]}`}>
+                  {pct(d.achv_today)}
+                </span>
               </span>
-            </td>
-            <td className={`text-right py-1.5 font-bold ${gapClass(d.gap)}`}>{rp(d.gap)}</td>
-          </>
-        )}
-      />
+              <span className={`text-right font-bold text-xs ${gapClass(d.gap)}`}>{rp(d.gap)}</span>
+            </div>
+          )}
+        />
+      </div>
     </div>
   );
 }

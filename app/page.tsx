@@ -13,28 +13,42 @@ import { BreakingNewsOverlay } from '@/components/BreakingNewsOverlay';
 import { AudioUnlockButton } from '@/components/AudioUnlockButton';
 import { useDashboardData } from '@/lib/useDashboardData';
 
+/**
+ * Layout satu layar penuh (TV, tanpa scroll): main dibatasi tepat 100dvh,
+ * flex-column. Header/KPI Matrix/Running Text tingginya mengikuti konten
+ * (shrink-0), dua baris section membagi SISA ruang lewat flex-[...] — jadi
+ * proporsinya tetap terjaga di berbagai resolusi TV/monitor tanpa perlu
+ * scroll maupun elemen terpotong.
+ */
 export default function DashboardPage() {
   const d = useDashboardData();
 
   return (
-    <main className="max-w-[1500px] mx-auto p-3.5 grid gap-3">
-      <Header />
+    <main className="h-[100dvh] max-w-[1600px] mx-auto p-3 flex flex-col gap-2.5 overflow-hidden">
+      <div className="shrink-0">
+        <Header />
+      </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1.2fr] gap-3">
+      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1.2fr] gap-2.5 flex-[1.05] min-h-0">
         <TargetGauge data={d.target} />
         <TopSeller data={d.topSeller} />
         <ChampionSpotlight data={d.champion} />
       </section>
 
-      <KpiMatrix data={d.store} />
+      <div className="shrink-0">
+        <KpiMatrix data={d.store} />
+      </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.15fr_1.25fr] gap-3">
+      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr_1.4fr] gap-2.5 flex-[1.3] min-h-0">
         <AchievementDept data={d.dept} />
         <SalesBySmt data={d.salesMtd} />
         <Derivatif furnipro={d.furnipro} comser={d.comser} />
       </section>
 
-      <RunningText data={d.runningText} />
+      <div className="shrink-0">
+        <RunningText data={d.runningText} />
+      </div>
+
       <BreakingNewsOverlay />
       <AudioUnlockButton />
     </main>
