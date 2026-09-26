@@ -18,7 +18,7 @@ function SubTable({
   const fmt = unit === 'pcs' ? pcs : rp;
 
   return (
-    <div className="h-full flex flex-col min-w-0">
+    <div className="h-full min-h-0 flex flex-col min-w-0">
       <div className="text-[11px] font-extrabold mb-1.5 shrink-0" style={{ color }}>
         {title}
       </div>
@@ -28,12 +28,12 @@ function SubTable({
           rowHeight={30}
           keyOf={(r) => r.nik}
           renderRow={(r, i) => (
-            <div className="grid grid-cols-[1.4rem_3fr_2fr] gap-2 items-center w-full text-sm">
-              <span className="text-mut w-5">{i + 1}</span>
-              <span className="truncate max-w-xs" title={r.nama}>
+            <div className="grid grid-cols-[1.4rem_minmax(0,1fr)_auto] gap-2 items-center w-full text-sm">
+              <span className="text-mut">{i + 1}</span>
+              <span className="truncate" title={r.nama}>
                 {r.nama}
               </span>
-              <span className="font-bold whitespace-nowrap truncate max-w-xs">{fmt(r.actual)}</span>
+              <span className="font-bold whitespace-nowrap">{fmt(r.actual)}</span>
             </div>
           )}
         />
@@ -44,11 +44,11 @@ function SubTable({
 
 export function Derivatif({ furnipro, comser }: { furnipro: KpiRank[]; comser: KpiRank[] }) {
   return (
-    <div className="card h-full flex flex-col overflow-hidden">
+    <div className="card h-full min-h-0 flex flex-col">
       <div className="h shrink-0">Derivatif (MTD)</div>
       {/* Comser diberi porsi lebar lebih besar — nama & nilai Rupiah butuh
           ruang lebih supaya tidak membungkus jadi 2 baris (memakan tinggi). */}
-      <div className="grid grid-cols-[0.8fr_1.2fr] gap-4 flex-1 min-h-0">
+      <div className="grid grid-cols-[0.8fr_1.2fr] auto-rows-fr gap-4 flex-1 min-h-0">
         <SubTable title="FURNIPRO" color="#2563eb" data={furnipro} unit="pcs" />
         <SubTable title="COMSER" color="#f59e0b" data={comser} unit="rp" />
       </div>

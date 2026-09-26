@@ -23,7 +23,7 @@ export function ChampionSpotlight({ data }: { data: Champion[] }) {
   const current = data.find((d) => d.kategori === TABS[tab].key);
 
   return (
-    <div className="card h-full flex flex-col relative overflow-hidden bg-gradient-to-br from-navy to-blue-900 text-white overflow-hidden">
+    <div className="card h-full min-h-0 flex flex-col relative overflow-hidden bg-gradient-to-br from-navy to-blue-900 text-white">
       {/* watermark besar biar ruang kosong di kartu ini tidak terasa hampa */}
       <span className="absolute -right-6 -bottom-8 text-[160px] opacity-[0.06] leading-none select-none pointer-events-none">
         {TABS[tab].icon}
@@ -66,33 +66,18 @@ export function ChampionSpotlight({ data }: { data: Champion[] }) {
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {/* Photo on left, data boxes on right */}
-            <div className="flex items-start gap-6">
-              <div
-                className="rounded-full p-1.5 shrink-0"
-                style={{ background: 'conic-gradient(#f59e0b,#e5484d,#7c3aed,#2563eb,#0f9d58,#f59e0b)' }}
-              >
-                <div className="rounded-full overflow-hidden bg-slate-200" style={{ width: 100, height: 100 }}>
-                  <StaffAvatar nik={current.nik} name={current.nama} size={100} />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-2.5">
-                  <div className="bg-white/10 rounded-xl p-2">
-                    <small className="block text-[9px] opacity-70 font-semibold">SALES MTD</small>
-                    <b className="text-base truncate max-w-xs">{rp(current.sales_mtd)}</b>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-2">
-                    <small className="block text-[9px] opacity-70 font-semibold">FP MTD</small>
-                    <b className="text-base">{rp(current.fp_mtd)}</b>
-                  </div>
-                  <div className="bg-white/10 rounded-xl p-2">
-                    <small className="block text-[9px] opacity-70 font-semibold">COMSER MTD</small>
-                    <b className="text-base">{rp(current.comser_mtd)}</b>
-                  </div>
-                </div>
-              </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            <div className="bg-white/10 rounded-xl p-2.5">
+              <small className="block text-[10px] opacity-70 font-semibold">SALES MTD</small>
+              <b className="text-base block truncate">{rp(current.sales_mtd)}</b>
+            </div>
+            <div className="bg-white/10 rounded-xl p-2.5">
+              <small className="block text-[10px] opacity-70 font-semibold">FP MTD</small>
+              <b className="text-base block truncate">{rp(current.fp_mtd)}</b>
+            </div>
+            <div className="bg-white/10 rounded-xl p-2.5">
+              <small className="block text-[10px] opacity-70 font-semibold">COMSER MTD</small>
+              <b className="text-base block truncate">{rp(current.comser_mtd)}</b>
             </div>
           </div>
         </div>
