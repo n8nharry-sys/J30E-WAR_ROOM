@@ -15,7 +15,7 @@ export function TargetGauge({ data }: { data: TargetSummary | null }) {
       <div className="flex-1 flex flex-col justify-center gap-3 min-w-0">
         <div className="grid grid-cols-[1fr_auto] gap-4 items-center">
           <div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-4">
               <div>
                 <div className="lbl">Target</div>
                 <div className="text-2xl font-black truncate max-w-xs">{rp(data?.target)}</div>

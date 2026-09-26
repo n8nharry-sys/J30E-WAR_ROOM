@@ -28,7 +28,7 @@ function SubTable({
           rowHeight={30}
           keyOf={(r) => r.nik}
           renderRow={(r, i) => (
-            <div className="grid grid-cols-[1.4rem_1fr_auto] gap-2 items-center w-full text-sm">
+            <div className="grid grid-cols-[1.4rem_3fr_2fr] gap-2 items-center w-full text-sm">
               <span className="text-mut w-5">{i + 1}</span>
               <span className="truncate max-w-xs" title={r.nama}>
                 {r.nama}

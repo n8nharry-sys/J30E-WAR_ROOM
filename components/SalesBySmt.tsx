@@ -20,6 +20,7 @@ export function SalesBySmt({ data }: { data: KpiRank[] }) {
       </div>
       <div className="flex-1 min-h-0">
         <RollingList
+          key={rows.length.toString()}
           rows={rows}
           keyOf={(r) => r.nik}
           renderRow={(r, i) => (

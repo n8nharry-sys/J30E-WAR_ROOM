@@ -23,6 +23,7 @@ export function AchievementDept({ data }: { data: DeptToday[] }) {
       </div>
       <div className="flex-1 min-h-0">
         <RollingList
+          key={rows.length.toString()}
           rows={rows}
           keyOf={(r) => r.kode_dept}
           renderRow={(d) => (

@@ -39,7 +39,7 @@ export default function DashboardPage() {
         <KpiMatrix data={d.store} />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr_1.4fr] gap-2.5 flex-[1.3] min-h-0 overflow-hidden">
+      <section className="grid grid-cols-1 lg:grid-cols-[1.2fr_1.2fr_1fr] gap-2.5 flex-[1.3] min-h-0 overflow-hidden">
         <AchievementDept data={d.dept} />
         <SalesBySmt data={d.salesMtd} />
         <Derivatif furnipro={d.furnipro} comser={d.comser} />
