@@ -20,7 +20,10 @@ function SubTable({
   // Diurutkan berdasarkan nilai yang ditampilkan (bukan %), tertinggi dulu.
   const rows = [...data].sort((a, b) => (b.actual ?? 0) - (a.actual ?? 0));
   const fmt = unit === 'pcs' ? pcs : rp;
-  const gridTemplateColumns = `1.4rem 12ch ${valueWidth}`;
+  // Kolom nama dipersempit ke 8ch (cukup utk nama 8 karakter); sisa ruang
+  // yang dibebaskan dialihkan ke kolom nilai lewat valueWidth supaya "Pcs"
+  // / angka Rupiah tidak lagi terpotong.
+  const gridTemplateColumns = `1.4rem 8ch ${valueWidth}`;
 
   return (
     <div className="h-full min-h-0 flex flex-col min-w-0">
@@ -52,11 +55,11 @@ export function Derivatif({ furnipro, comser }: { furnipro: KpiRank[]; comser: K
     <div className="card h-full min-h-0 flex flex-col">
       <div className="h shrink-0">Derivatif (MTD)</div>
       {/* Porsi lebar FURNIPRO vs COMSER disesuaikan dengan kebutuhan kolom
-          nilainya masing-masing (6ch vs 12ch) supaya keduanya pas, tidak
+          nilainya masing-masing (10ch vs 16ch) supaya keduanya pas, tidak
           ada yang kesempitan atau kelebihan ruang. */}
-      <div className="grid grid-cols-[0.9fr_1.1fr] auto-rows-fr gap-4 flex-1 min-h-0">
-        <SubTable title="FURNIPRO" color="#2563eb" data={furnipro} unit="pcs" valueWidth="6ch" />
-        <SubTable title="COMSER" color="#f59e0b" data={comser} unit="rp" valueWidth="12ch" />
+      <div className="grid grid-cols-[0.85fr_1.15fr] auto-rows-fr gap-4 flex-1 min-h-0">
+        <SubTable title="FURNIPRO" color="#2563eb" data={furnipro} unit="pcs" valueWidth="10ch" />
+        <SubTable title="COMSER" color="#f59e0b" data={comser} unit="rp" valueWidth="16ch" />
       </div>
     </div>
   );
