@@ -29,17 +29,17 @@ export default function DashboardPage() {
         <Header />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1.2fr] gap-2.5 flex-[1.05] min-h-0">
+      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1.2fr] gap-2.5 flex-[1.2] min-h-0 overflow-hidden">
         <TargetGauge data={d.target} />
         <TopSeller data={d.topSeller} />
         <ChampionSpotlight data={d.champion} />
       </section>
 
-      <div className="shrink-0">
+      <div className="shrink-0 overflow-hidden max-h-[180px]">
         <KpiMatrix data={d.store} />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr_1.4fr] gap-2.5 flex-[1.3] min-h-0">
+      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr_1.4fr] gap-2.5 flex-[1.3] min-h-0 overflow-hidden">
         <AchievementDept data={d.dept} />
         <SalesBySmt data={d.salesMtd} />
         <Derivatif furnipro={d.furnipro} comser={d.comser} />

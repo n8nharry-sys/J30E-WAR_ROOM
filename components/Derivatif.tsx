@@ -29,11 +29,11 @@ function SubTable({
           keyOf={(r) => r.nik}
           renderRow={(r, i) => (
             <div className="grid grid-cols-[1.4rem_1fr_auto] gap-2 items-center w-full text-sm">
-              <span className="text-mut">{i + 1}</span>
-              <span className="truncate" title={r.nama}>
+              <span className="text-mut w-5">{i + 1}</span>
+              <span className="truncate max-w-xs" title={r.nama}>
                 {r.nama}
               </span>
-              <span className="font-bold whitespace-nowrap">{fmt(r.actual)}</span>
+              <span className="font-bold whitespace-nowrap truncate max-w-xs">{fmt(r.actual)}</span>
             </div>
           )}
         />
@@ -44,7 +44,7 @@ function SubTable({
 
 export function Derivatif({ furnipro, comser }: { furnipro: KpiRank[]; comser: KpiRank[] }) {
   return (
-    <div className="card h-full flex flex-col">
+    <div className="card h-full flex flex-col overflow-hidden">
       <div className="h shrink-0">Derivatif (MTD)</div>
       {/* Comser diberi porsi lebar lebih besar — nama & nilai Rupiah butuh
           ruang lebih supaya tidak membungkus jadi 2 baris (memakan tinggi). */}

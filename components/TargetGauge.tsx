@@ -9,20 +9,20 @@ export function TargetGauge({ data }: { data: TargetSummary | null }) {
   const barPct = Math.min(100, ((data?.sales ?? 0) / ((data?.target ?? 1) * 1.3)) * 100);
 
   return (
-    <div className="card h-full flex flex-col">
+    <div className="card h-full flex flex-col overflow-hidden">
       <div className="h shrink-0">Target Hari Ini</div>
 
-      <div className="flex-1 flex flex-col justify-center gap-3">
+      <div className="flex-1 flex flex-col justify-center gap-3 min-w-0">
         <div className="grid grid-cols-[1fr_auto] gap-4 items-center">
           <div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <div className="lbl">Target</div>
-                <div className="text-2xl font-black">{rp(data?.target)}</div>
+                <div className="text-2xl font-black truncate max-w-xs">{rp(data?.target)}</div>
               </div>
               <div>
                 <div className="lbl">Sales Hari Ini</div>
-                <div className="text-2xl font-black text-good">{rp(data?.sales)}</div>
+                <div className="text-2xl font-black text-good truncate max-w-xs">{rp(data?.sales)}</div>
               </div>
             </div>
             <div className="lbl mt-3">

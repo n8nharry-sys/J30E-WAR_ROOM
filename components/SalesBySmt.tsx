@@ -26,13 +26,13 @@ export function SalesBySmt({ data }: { data: KpiRank[] }) {
             <div className={`grid ${COLS} gap-2 items-center w-full text-sm`}>
               <span className="text-mut">{i + 1}</span>
               <span className="truncate">{r.nama}</span>
-              <span className="text-right font-semibold">{rp(r.actual)}</span>
+              <span className="text-right font-semibold truncate max-w-xs">{rp(r.actual)}</span>
               <span className="text-right">
                 <span className={`px-1.5 py-0.5 rounded-full font-bold text-[10px] ${PILL[achvClass(r.achv)]}`}>
                   {pct(r.achv)}
                 </span>
               </span>
-              <span className={`text-right font-bold text-xs ${gapClass(r.gap)}`}>{rp(r.gap)}</span>
+              <span className={`text-right font-bold text-xs ${gapClass(r.gap)} truncate max-w-xs`}>{rp(r.gap)}</span>
             </div>
           )}
         />

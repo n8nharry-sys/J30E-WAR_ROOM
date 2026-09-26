@@ -23,7 +23,7 @@ export function ChampionSpotlight({ data }: { data: Champion[] }) {
   const current = data.find((d) => d.kategori === TABS[tab].key);
 
   return (
-    <div className="card h-full flex flex-col relative overflow-hidden bg-gradient-to-br from-navy to-blue-900 text-white">
+    <div className="card h-full flex flex-col relative overflow-hidden bg-gradient-to-br from-navy to-blue-900 text-white overflow-hidden">
       {/* watermark besar biar ruang kosong di kartu ini tidak terasa hampa */}
       <span className="absolute -right-6 -bottom-8 text-[160px] opacity-[0.06] leading-none select-none pointer-events-none">
         {TABS[tab].icon}
@@ -69,7 +69,7 @@ export function ChampionSpotlight({ data }: { data: Champion[] }) {
           <div className="grid grid-cols-3 gap-2.5">
             <div className="bg-white/10 rounded-xl p-2.5">
               <small className="block text-[10px] opacity-70 font-semibold">SALES MTD</small>
-              <b className="text-base">{rp(current.sales_mtd)}</b>
+              <b className="text-base truncate max-w-xs">{rp(current.sales_mtd)}</b>
             </div>
             <div className="bg-white/10 rounded-xl p-2.5">
               <small className="block text-[10px] opacity-70 font-semibold">FP MTD</small>

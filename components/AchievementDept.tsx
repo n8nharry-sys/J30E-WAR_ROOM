@@ -28,13 +28,13 @@ export function AchievementDept({ data }: { data: DeptToday[] }) {
           renderRow={(d) => (
             <div className={`grid ${COLS} gap-2 items-center w-full text-sm`}>
               <span className="truncate">{d.nama_dept}</span>
-              <span className="text-right font-semibold">{rp(d.sales_today)}</span>
+              <span className="text-right font-semibold truncate max-w-xs">{rp(d.sales_today)}</span>
               <span className="text-right">
                 <span className={`px-1.5 py-0.5 rounded-full font-bold text-[10px] ${PILL[achvClass(d.achv_today)]}`}>
                   {pct(d.achv_today)}
                 </span>
               </span>
-              <span className={`text-right font-bold text-xs ${gapClass(d.gap)}`}>{rp(d.gap)}</span>
+              <span className={`text-right font-bold text-xs ${gapClass(d.gap)} truncate max-w-xs`}>{rp(d.gap)}</span>
             </div>
           )}
         />

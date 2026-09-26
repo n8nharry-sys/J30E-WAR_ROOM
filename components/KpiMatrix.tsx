@@ -25,7 +25,7 @@ export function KpiMatrix({ data }: { data: StoreToday | null }) {
           </div>
           <div className="min-w-0">
             <small className="text-mut text-[10px] font-bold uppercase block">{it.label}</small>
-            <b className="block text-base font-black truncate">{it.value}</b>
+            <b className="block text-base font-black truncate max-w-xs">{it.value}</b>
           </div>
         </div>
       ))}
