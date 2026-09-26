@@ -3,7 +3,9 @@ import { rp, pct, gapClass, achvClass } from '@/lib/format';
 import { RollingList } from './RollingList';
 
 const PILL = { g: 'bg-green-100 text-green-800', o: 'bg-amber-100 text-amber-800', r: 'bg-red-100 text-red-800' };
-const COLS = 'grid-cols-[1.6rem_minmax(0,1fr)_7rem_4.5rem_7rem]';
+// Kolom nama SMT dipatok 12 karakter (bukan flexible) supaya konsisten dan
+// tidak lagi terpotong jadi 1-2 huruf saat share lebar kartu sempit.
+const COLS = 'grid-cols-[1.6rem_12ch_7rem_4.5rem_7rem]';
 
 export function SalesBySmt({ data }: { data: KpiRank[] }) {
   const rows = [...data].sort((a, b) => (b.achv ?? 0) - (a.achv ?? 0));

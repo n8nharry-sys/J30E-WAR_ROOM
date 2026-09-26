@@ -3,7 +3,7 @@ import { rp, gapClass } from '@/lib/format';
 import { StaffAvatar } from './StaffAvatar';
 
 export function TopSeller({ data }: { data: TopSellerRow[] }) {
-  const rows = data.slice(0, 5);
+  const rows = data.slice(0, 3);
 
   return (
     <div className="card h-full min-h-0 flex flex-col">
