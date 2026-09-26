@@ -39,7 +39,11 @@ export default function DashboardPage() {
         <KpiMatrix data={d.store} />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1.15fr_1.05fr_1fr] auto-rows-fr gap-2.5 flex-[1.3] min-h-0">
+      {/* Kolom nama departemen di Achievement Dept dipersempit (22ch -> 12ch),
+          jadi box-nya diperkecil dari 1.15fr -> 0.95fr; selisihnya (0.2fr)
+          dipindahkan ke Derivatif (1fr -> 1.2fr) supaya kolom jumlah
+          penjualan Furnipro & Comser tidak lagi terpotong. SalesBySmt tetap. */}
+      <section className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr_1.2fr] auto-rows-fr gap-2.5 flex-[1.3] min-h-0">
         <AchievementDept data={d.dept} />
         <SalesBySmt data={d.salesMtd} />
         <Derivatif furnipro={d.furnipro} comser={d.comser} />

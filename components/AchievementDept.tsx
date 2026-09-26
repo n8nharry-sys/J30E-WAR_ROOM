@@ -3,10 +3,12 @@ import { rp, pct, gapClass, achvClass } from '@/lib/format';
 import { RollingList } from './RollingList';
 
 const PILL = { g: 'bg-green-100 text-green-800', o: 'bg-amber-100 text-amber-800', r: 'bg-red-100 text-red-800' };
-// Kolom departemen dipatok 22 karakter (bukan flexible) sesuai permintaan —
-// nama yang lebih panjang tetap dipotong dengan "...", yang lebih pendek
-// tidak memakai ruang ekstra.
-const COLS = 'grid-cols-[22ch_7rem_4.5rem_7rem]';
+// Kolom departemen dipatok 12 karakter (bukan flexible) — dipersempit dari
+// 22ch supaya box section ini bisa dipersempit dan ruangnya dialihkan ke
+// section Derivatif (MTD) yang datanya sempat terpotong. Nama yang lebih
+// panjang tetap dipotong dengan "...", yang lebih pendek tidak memakai
+// ruang ekstra.
+const COLS = 'grid-cols-[12ch_7rem_4.5rem_7rem]';
 
 export function AchievementDept({ data }: { data: DeptToday[] }) {
   // AJ / AL (kode non-departemen, target 0) dilewati supaya tidak
