@@ -14,14 +14,14 @@ export function KpiMatrix({ data }: { data: StoreToday | null }) {
     { label: 'AUR', value: rp(data?.aur), icon: TrendingUp, color: '#ea580c' },
   ];
   return (
-    <section className="grid grid-cols-4 md:grid-cols-8 gap-2.5 shrink-0">
+    <section className="grid grid-cols-4 md:grid-cols-8 gap-2 shrink-0">
       {items.map((it) => (
-        <div key={it.label} className="card p-2.5 flex items-center gap-2.5">
+        <div key={it.label} className="card p-2 flex items-center gap-2">
           <div
-            className="w-9 h-9 rounded-xl grid place-items-center shrink-0"
+            className="w-8 h-8 rounded-lg grid place-items-center shrink-0"
             style={{ background: it.color + '1a', color: it.color }}
           >
-            <it.icon size={18} strokeWidth={2.4} />
+            <it.icon size={16} strokeWidth={2.4} />
           </div>
           <div className="min-w-0">
             <small className="text-mut text-[10px] font-bold uppercase block">{it.label}</small>

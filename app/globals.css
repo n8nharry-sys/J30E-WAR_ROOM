@@ -27,10 +27,10 @@ body {
 
 @layer components {
   .card {
-    @apply bg-white border border-line rounded-card p-3.5 shadow-sm;
+    @apply bg-white border border-line rounded-card p-2.5 shadow-sm;
   }
   .h {
-    @apply font-extrabold text-[11px] tracking-wide uppercase text-mut mb-2;
+    @apply font-extrabold text-[11px] tracking-wide uppercase text-mut mb-1.5;
   }
   .lbl {
     @apply text-mut text-[11px];

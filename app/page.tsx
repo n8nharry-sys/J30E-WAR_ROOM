@@ -24,12 +24,12 @@ export default function DashboardPage() {
   const d = useDashboardData();
 
   return (
-    <main className="h-[100dvh] max-w-[1600px] mx-auto p-3 flex flex-col gap-2.5 overflow-hidden">
+    <main className="h-[100dvh] max-w-[1600px] mx-auto p-2 flex flex-col gap-2 overflow-hidden">
       <div className="shrink-0">
         <Header />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1.2fr] auto-rows-fr gap-2.5 flex-[1.05] min-h-0">
+      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] auto-rows-fr gap-2 flex-[1.05] min-h-0">
         <TargetGauge data={d.target} />
         <TopSeller data={d.topSeller} />
         <ChampionSpotlight data={d.champion} />
@@ -39,11 +39,7 @@ export default function DashboardPage() {
         <KpiMatrix data={d.store} />
       </div>
 
-      {/* Kolom nama departemen di Achievement Dept dipersempit (22ch -> 12ch),
-          jadi box-nya diperkecil dari 1.15fr -> 0.95fr; selisihnya (0.2fr)
-          dipindahkan ke Derivatif (1fr -> 1.2fr) supaya kolom jumlah
-          penjualan Furnipro & Comser tidak lagi terpotong. SalesBySmt tetap. */}
-      <section className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr_1.2fr] auto-rows-fr gap-2.5 flex-[1.3] min-h-0">
+      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.05fr)_minmax(0,1.1fr)] auto-rows-fr gap-2 flex-[1.3] min-h-0">
         <AchievementDept data={d.dept} />
         <SalesBySmt data={d.salesMtd} />
         <Derivatif furnipro={d.furnipro} comser={d.comser} />
