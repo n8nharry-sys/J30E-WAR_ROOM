@@ -20,24 +20,24 @@ export function TargetGauge({ data }: { data: TargetSummary | null }) {
           <div className="min-w-0">
             <div>
               <div className="lbl">Target</div>
-              <div className="text-lg font-black truncate">{rp(data?.target)}</div>
+              <div className="text-xl font-black truncate">{rp(data?.target)}</div>
             </div>
-            <div className="mt-1.5">
+            <div className="mt-2">
               <div className="lbl">Sales Hari Ini</div>
-              <div className="text-lg font-black text-good truncate">{rp(data?.sales)}</div>
+              <div className="text-xl font-black text-good truncate">{rp(data?.sales)}</div>
             </div>
-            <div className="lbl mt-1.5">
+            <div className="lbl mt-2">
               Gap: <b className={`text-sm ${gapClass(data?.gap)}`}>{rp(data?.gap)}</b>
             </div>
           </div>
           <div
-            className="w-[92px] h-[92px] rounded-full grid place-items-center shrink-0"
+            className="w-[110px] h-[110px] rounded-full grid place-items-center shrink-0"
             style={{ background: `conic-gradient(#0f9d58 0 ${deg}%, #e3e9f2 0)` }}
           >
-            <div className="w-[68px] h-[68px] rounded-full bg-white grid place-items-center">
-              <span className="text-base font-black text-center">
+            <div className="w-[82px] h-[82px] rounded-full bg-white grid place-items-center">
+              <span className="text-xl font-black text-center">
                 {pct(achv, 1)}
-                <small className="block text-[8px] text-mut font-semibold tracking-wide">ACHV</small>
+                <small className="block text-[9px] text-mut font-semibold tracking-wide">ACHIEVEMENT</small>
               </span>
             </div>
           </div>

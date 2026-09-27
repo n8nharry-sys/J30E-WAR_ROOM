@@ -155,18 +155,88 @@ function syncDept_() {
   );
 }
 
+/** Daftar NIK yang terdaftar di API_employee — dipakai untuk validasi FK
+ * SEBELUM kirim ke Supabase (lihat catatan di syncSmtToday_). */
+function activeEmployeeNiks_() {
+  const rows = sheetRows_('API_employee') || [];
+  const set = {};
+  rows.forEach((r) => {
+    if (!isBad_(r.nik)) set[Number(r.nik)] = true;
+  });
+  return set;
+}
+
+/** Daftar kode_dept yang terdaftar di API_dept — dipakai untuk validasi FK. */
+function activeDeptCodes_() {
+  const rows = sheetRows_('API_dept') || [];
+  const set = {};
+  rows.forEach((r) => {
+    if (!isBad_(r.kode_dept)) set[String(r.kode_dept).trim()] = true;
+  });
+  return set;
+}
+
+/** Catat baris yang dilewati ke sheet "Sync_Log" (dibuat otomatis) supaya
+ * kelihatan langsung di spreadsheet, tanpa perlu buka Apps Script Executions. */
+function logSkipped_(context, notes) {
+  if (!notes || notes.length === 0) return;
+  const ss = SpreadsheetApp.getActive();
+  let sh = ss.getSheetByName('Sync_Log');
+  if (!sh) {
+    sh = ss.insertSheet('Sync_Log');
+    sh.appendRow(['Waktu', 'Konteks', 'Detail']);
+  }
+  const now = Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd HH:mm:ss');
+  notes.forEach((detail) => sh.appendRow([now, context, detail]));
+}
+
+/**
+ * PENTING — akar masalah "smt_daily satu-satunya tabel yang tidak update":
+ * smt_daily.nik & smt_daily.kode_dept adalah FOREIGN KEY ke employees.nik
+ * dan dept.kode_dept. upsert_() mengirim SEMUA baris dalam SATU request; kalau
+ * ada 1 baris saja dengan nik atau kode_dept yang BELUM terdaftar (misalnya
+ * SMT baru ditambahkan di API_employee tapi kode_dept-nya belum ada di
+ * API_dept, atau baris barunya belum tersalin ke API_smt_today), Supabase
+ * menolak SELURUH batch — bukan cuma baris itu — sehingga tabel tampak
+ * "berhenti update" walau syncAll() dilaporkan sukses (errornya cuma masuk
+ * ke Logger.log, tidak terlihat di UI spreadsheet).
+ *
+ * Makanya di sini setiap baris divalidasi dulu terhadap API_employee &
+ * API_dept SEBELUM dikirim: baris yang belum valid dilewati (tidak
+ * menggagalkan baris lain) dan dicatat ke sheet "Sync_Log" supaya langsung
+ * ketahuan NIK/kode_dept mana yang perlu dibereskan.
+ */
 function syncSmtToday_() {
   const rows = sheetRows_('API_smt_today');
   if (!rows) return;
   const snapshot_date = todayStr_();
+  const validNik = activeEmployeeNiks_();
+  const validDept = activeDeptCodes_();
+  const skipped = [];
+
   const payload = rows
     .filter((r) => !isBad_(r.nik) && !isBad_(r.kode_dept))
+    .filter((r) => {
+      const nik = toNum_(r.nik);
+      const dept = String(r.kode_dept).trim();
+      if (!validNik[nik]) {
+        skipped.push('Dilewati: nik ' + nik + ' belum terdaftar di API_employee');
+        return false;
+      }
+      if (!validDept[dept]) {
+        skipped.push('Dilewati: kode_dept "' + dept + '" (nik ' + nik + ') belum terdaftar di API_dept');
+        return false;
+      }
+      return true;
+    })
     .map((r) => ({
       snapshot_date,
       nik: toNum_(r.nik),
       kode_dept: r.kode_dept,
       sales_today: toNum_(r.sales_today) || 0,
     }));
+
+  logSkipped_('smt_today', skipped);
   upsert_('smt_daily', payload, 'snapshot_date,nik,kode_dept');
 }
 
@@ -261,6 +331,10 @@ function syncAll() {
   }
   if (errors.length) {
     Logger.log('Sync selesai dengan error pada: ' + errors.join(' | '));
+    // Ditulis juga ke sheet Sync_Log — sebelumnya error di sini hanya masuk
+    // ke Logger.log (Executions), jadi mudah tidak disadari saat "sync all"
+    // terlihat berhasil dari luar padahal salah satu job gagal di dalam.
+    logSkipped_('syncAll ERROR', errors);
   } else {
     Logger.log('Sync sukses — ' + new Date());
   }

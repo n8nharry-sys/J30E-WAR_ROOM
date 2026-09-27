@@ -19,6 +19,10 @@ import { useDashboardData } from '@/lib/useDashboardData';
  * (shrink-0), dua baris section membagi SISA ruang lewat flex-[...] — jadi
  * proporsinya tetap terjaga di berbagai resolusi TV/monitor tanpa perlu
  * scroll maupun elemen terpotong.
+ *
+ * Padding & gap dipadatkan (p-3->p-2, gap-2.5->gap-2) supaya di layar
+ * 1360x768 — yang tingginya jauh lebih pendek dari TV pada umumnya — sisa
+ * ruang vertikal untuk kedua section utama tetap cukup lega.
  */
 export default function DashboardPage() {
   const d = useDashboardData();
@@ -29,7 +33,11 @@ export default function DashboardPage() {
         <Header />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,1.2fr)] auto-rows-fr gap-2 flex-[1.05] min-h-0">
+      {/* Champion Spotlight butuh lebih banyak ruang horizontal supaya sub-box
+          Sales/Furnipro/Comser tidak terpotong di layar 1360x768, jadi
+          porsinya dinaikkan (1.2fr -> 1.4fr); TargetGauge & TopSeller sedikit
+          dikurangi (1fr->0.9fr, 1.5fr->1.4fr) untuk mengimbangi. */}
+      <section className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.4fr_1.4fr] auto-rows-fr gap-2 flex-[1.05] min-h-0">
         <TargetGauge data={d.target} />
         <TopSeller data={d.topSeller} />
         <ChampionSpotlight data={d.champion} />
@@ -39,7 +47,11 @@ export default function DashboardPage() {
         <KpiMatrix data={d.store} />
       </div>
 
-      <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1.05fr)_minmax(0,1.1fr)] auto-rows-fr gap-2 flex-[1.3] min-h-0">
+      {/* Kolom nama departemen di Achievement Dept dipersempit (22ch -> 12ch),
+          jadi box-nya diperkecil dari 1.15fr -> 0.95fr; selisihnya (0.2fr)
+          dipindahkan ke Derivatif (1fr -> 1.2fr) supaya kolom jumlah
+          penjualan Furnipro & Comser tidak lagi terpotong. SalesBySmt tetap. */}
+      <section className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr_1.2fr] auto-rows-fr gap-2 flex-[1.3] min-h-0">
         <AchievementDept data={d.dept} />
         <SalesBySmt data={d.salesMtd} />
         <Derivatif furnipro={d.furnipro} comser={d.comser} />

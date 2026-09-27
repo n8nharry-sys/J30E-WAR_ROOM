@@ -3,23 +3,26 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Daftar yang menggulir vertikal terus-menerus TANPA JEDA BERHENTI — dipakai
+ * Daftar yang menggulir vertikal terus-menerus (bukan berhalaman) — dipakai
  * untuk Achievement Dept Today, Sales by SMT (MTD), dan Derivatif (MTD).
  * Data HARUS sudah diurutkan tertinggi→terendah oleh pemanggil; komponen ini
  * hanya menggulirkannya, tidak menyortir ulang.
  *
- * Teknik: konten dirender DUA KALI berturut-turut (dipisah satu baris
- * divider kosong), lalu digulir dengan kecepatan tetap. Begitu posisi
- * gulir mencapai persis satu set (rows + divider), posisi dikurangi
- * sebesar itu juga (bukan direset ke 0) — sehingga potongan pixel yang
- * tersisa tetap terbawa dan gulirannya benar-benar mulus tanpa lompatan/
- * jeda saat berputar dari data terakhir kembali ke data pertama.
+ * Tinggi kontainer diukur otomatis dari parent (h-full) — bukan jumlah baris
+ * tetap — supaya pas mengisi space yang tersedia di layout satu layar TV
+ * tanpa perlu scroll.
+ *
+ * Perilaku: CONTINUOUS ROLLING — bergulir halus satu arah dengan kecepatan
+ * tetap (px/detik), tanpa berhenti/snap. Daftarnya dirender dua kali
+ * berurutan (asli + duplikat) dipisah satu baris kosong berdivider; begitu
+ * posisi scroll melewati satu siklus penuh (data asli + divider), posisinya
+ * dikurangi persis satu siklus — karena salinan kedua identik dengan yang
+ * pertama, lompatan ini tidak terlihat sehingga loop terasa mulus/menerus.
  */
 export function RollingList<T>({
   rows,
   rowHeight = 30,
-  speed = 22, // px per detik
-  dividerHeight = 16,
+  speed = 24, // px per detik
   renderRow,
   keyOf,
   emptyLabel = 'Belum ada data',
@@ -27,7 +30,6 @@ export function RollingList<T>({
   rows: T[];
   rowHeight?: number;
   speed?: number;
-  dividerHeight?: number;
   renderRow: (row: T, index: number) => React.ReactNode;
   keyOf: (row: T) => string | number;
   emptyLabel?: string;
@@ -37,11 +39,10 @@ export function RollingList<T>({
   const posRef = useRef(0);
 
   const rowKey = rows.map(keyOf).join('|');
+  const dividerHeight = rowHeight; // "jeda 1 line kosong" antara data terakhir & data pertama
+  const cycleHeight = rows.length * rowHeight + dividerHeight;
 
   useEffect(() => {
-    // Reset posisi hanya kalau isi/urutan baris benar-benar berubah — data
-    // dashboard di-poll ulang tiap 60 detik, jangan sampai "loncat" tiap
-    // poll walau datanya sama.
     posRef.current = 0;
     if (trackRef.current) trackRef.current.style.transform = 'translateY(0px)';
   }, [rowKey]);
@@ -54,13 +55,13 @@ export function RollingList<T>({
       const dt = (now - last) / 1000;
       last = now;
       const containerHeight = containerRef.current?.clientHeight ?? 0;
-      const oneSetHeight = rows.length * rowHeight + dividerHeight;
+      // Kalau seluruh siklus (data + divider) sudah muat di dalam container,
+      // tidak perlu menggulir sama sekali.
+      const needsScroll = cycleHeight > containerHeight;
 
-      if (oneSetHeight > containerHeight && rows.length > 0) {
+      if (needsScroll) {
         posRef.current += speed * dt;
-        if (posRef.current >= oneSetHeight) {
-          posRef.current -= oneSetHeight; // wrap mulus, sisa pixel tetap terbawa
-        }
+        if (posRef.current >= cycleHeight) posRef.current -= cycleHeight; // loop mulus, tanpa jeda/snap
         if (trackRef.current) trackRef.current.style.transform = `translateY(-${posRef.current}px)`;
       }
       raf = requestAnimationFrame(tick);
@@ -68,35 +69,35 @@ export function RollingList<T>({
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [rows.length, rowHeight, speed, dividerHeight]);
+  }, [rows.length, rowHeight, speed, cycleHeight]);
 
   if (rows.length === 0) {
     return <p className="text-mut text-sm text-center py-6">{emptyLabel}</p>;
   }
 
-  const renderSet = (suffix: string) => (
-    <>
-      {rows.map((r, i) => (
-        <div
-          key={`${keyOf(r)}-${suffix}`}
-          style={{ height: rowHeight }}
-          className="flex items-center border-t border-line first:border-0"
-        >
-          {renderRow(r, i)}
-        </div>
-      ))}
-    </>
+  const Row = ({ r, i, dup }: { r: T; i: number; dup?: boolean }) => (
+    <div
+      key={(dup ? 'dup-' : '') + String(keyOf(r))}
+      style={{ height: rowHeight }}
+      className="flex items-center border-t border-line first:border-0"
+    >
+      {renderRow(r, i)}
+    </div>
   );
 
   return (
     <div ref={containerRef} className="h-full overflow-hidden">
       <div ref={trackRef} style={{ willChange: 'transform' }}>
-        {renderSet('a')}
-        {/* Divider: penanda batas data terakhir → data pertama saat berputar */}
-        <div style={{ height: dividerHeight }} className="flex items-center">
-          <div className="w-full border-t border-dashed border-line" />
+        {rows.map((r, i) => (
+          <Row key={keyOf(r)} r={r} i={i} />
+        ))}
+        {/* Divider penanda batas satu siklus data, sebelum data diulang dari awal */}
+        <div style={{ height: dividerHeight }} className="flex items-center px-0.5">
+          <div className="w-full border-t border-dashed border-line/70" />
         </div>
-        {renderSet('b')}
+        {rows.map((r, i) => (
+          <Row key={`dup-${keyOf(r)}`} r={r} i={i} dup />
+        ))}
       </div>
     </div>
   );
