@@ -1,9 +1,3 @@
- File ini adalah halaman admin yang telah direvisi total dengan:
-  - Tombol konfirmasi data pagi
-  - Perbaikan input angka (tidak lagi tertarik pada 0)
-  - Layout responsif dan scrollable di HP
-  - JSX syntax yang sudah diperbaiki (terminasi kurung yang tepat)
-
   'use client';
 
   import { useEffect, useState } from 'react';
