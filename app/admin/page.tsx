@@ -180,7 +180,7 @@
                 onChange={(e) => setSales(e.target.value.replace(/[^0-9]/g, ''))}
                 className="w-full border border-line rounded-lg px-3 py-2 mt-1"
                 placeholder="0"
-                inputmode="numeric"
+                inputMode="numeric"
               />
             </label>
             <label className="text-sm block">
@@ -191,7 +191,7 @@
                 onChange={(e) => setFurnipro(e.target.value.replace(/[^0-9]/g, ''))}
                 className="w-full border border-line rounded-lg px-3 py-2 mt-1"
                 placeholder="0"
-                inputmode="numeric"
+                inputMode="numeric"
               />
             </label>
             <label className="text-sm block">
@@ -202,7 +202,7 @@
                 onChange={(e) => setComser(e.target.value.replace(/[^0-9]/g, ''))}
                 className="w-full border border-line rounded-lg px-3 py-2 mt-1"
                 placeholder="0"
-                inputmode="numeric"
+                inputMode="numeric"
               />
             </label>
           </div>
