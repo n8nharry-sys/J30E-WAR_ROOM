@@ -19,7 +19,7 @@
  *  - kpi_mtd TIDAK mengirim day_start_actual — nilai itu dihitung otomatis
  *    oleh trigger di database (lihat supabase-schema.sql).
  *  - running_text pakai NOMOR BARIS sebagai id. Jangan menyisipkan baris di
- *    tengah sheet API_running-text; untuk menonaktifkan pesan, cukup ubah
+ *    tengah sheet API_running_text; untuk menonaktifkan pesan, cukup ubah
  *    kolom 'aktif' jadi FALSE.
  */
 
@@ -282,7 +282,7 @@ function syncTargetHarian_() {
 }
 
 function syncRunningText_() {
-  const rows = sheetRows_('API_running-text');
+  const rows = sheetRows_('API_running_text');
   if (!rows) return;
   const payload = rows
     .map((r, i) => ({

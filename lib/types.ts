@@ -93,3 +93,10 @@ export type BreakingEvent = {
 };
 
 export type RunningTextRow = { id: number; teks: string; urutan: number };
+
+export type Settings = {
+  key: string;
+  value: string;
+  created_at: string;
+  updated_at: string;
+};
