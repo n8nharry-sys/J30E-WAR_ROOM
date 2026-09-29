@@ -278,14 +278,11 @@
 
   function SettingsPanel() {
     const [mode, setMode] = useState<'auto' | 'review'>('review');
-    const [dataConfirmedDate, setDataConfirmedDate] = useState<string | null>(null);
-    const [confirmBusy, setConfirmBusy] = useState(false);
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {
       api('/api/admin/settings').then((r) => {
         setMode(r.breaking_mode);
-        setDataConfirmedDate(r.data_confirmed_date ?? null);
       });
     }, []);
 
@@ -296,27 +293,6 @@
         setMode(next);
       } finally {
         setBusy(false);
-      }
-    }
-
-    async function confirmDataUpdate() {
-      setConfirmBusy(true);
-      try {
-        const today = new Date();
-        const wibOffset = 7 * 60 * 60 * 1000; // WIB is UTC+7
-        const wibTime = today.getTime() + wibOffset;
-        const wibDate = new Date(wibTime);
-        const dateString = wibDate.toISOString().split('T')[0]; // YYYY-MM-DD
-
-        await api('/api/admin/settings', {
-          method: 'POST',
-          body: JSON.stringify({ data_confirmed_date: dateString })
-        });
-        setDataConfirmedDate(dateString);
-      } catch (error) {
-        console.error('Gagal mengonfirmasi update data:', error);
-      } finally {
-        setConfirmBusy(false);
       }
     }
 
@@ -342,30 +318,6 @@
           >
             Langsung tayang
           </button>
-        </div>
-
-        <div className="mt-4 pt-3 border-t border-line">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium">Konfirmasi Data Pagi</span>
-            {dataConfirmedDate ? (
-              <span className="text-xs text-good">Diupdate: {dataConfirmedDate}</span>
-            ) : (
-              <span className="text-xs text-mut">Belum dikonfirmasi hari ini</span>
-            )}
-          </div>
-          <button
-            disabled={confirmBusy}
-            onClick={confirmDataUpdate}
-            className="w-full bg-navy text-white text-sm font-bold py-2 px-4 rounded-lg"
-          >
-            {confirmBusy ? 'Mengonfirmasi...' : '✅ Tandai Data Hari Ini Sudah Update'}
-          </button>
-          {dataConfirmedDate && (
-            <p className="mt-2 text-xs text-mut">
-              Konfirmasi ini memberitahu dashboard untuk menampilkan data hari ini alih-alih
-              data kemarin yang mungkin masih tersimpa dalam sistem.
-            </p>
-          )}
         </div>
       </div>
     );
