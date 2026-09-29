@@ -1,23 +1,25 @@
--- Fix: Filter v_top_seller to only include rows where updated_at matches snapshot_date
--- This prevents stale data from yesterday being shown after the midnight snapshot
--- but before the morning manual data update (08:00 - 10:00).
+-- Fix: Update v_top_seller view to restore today_target & gap calculation
+-- plus add filter updated_at >= snapshot_date to prevent stale data from
+-- midnight snapshot showing before morning manual data update.
+--
+-- Root cause: Previous fix only returned sales_today, missing today_target
+-- which is calculated from kpi_mtd.target * daily_percentage / 100.
 
--- Drop existing view
 DROP VIEW IF EXISTS public.v_top_seller CASCADE;
 
--- Recreate view with updated_at filter
 CREATE OR REPLACE VIEW public.v_top_seller AS
-SELECT 
-  e.nik,
-  e.nama,
-  sd.sales_today,
-  sd.snapshot_date
-FROM smt_daily sd
-JOIN employees e ON e.nik = sd.nik
-WHERE sd.snapshot_date = CURRENT_DATE
-  AND sd.updated_at::date >= sd.snapshot_date
-ORDER BY sd.sales_today DESC
-LIMIT 10;
+SELECT rank() OVER (ORDER BY sum(s.sales_today) DESC) as no,
+       e.nik, e.nama, e.nik || '.jpg' as photo_path,
+       sum(s.sales_today) as sales_today,
+       round(max(k.target) * t.pct / 100) as today_target,
+       sum(s.sales_today) - round(max(k.target) * t.pct / 100) as gap
+FROM smt_daily s
+JOIN employees e on e.nik = s.nik
+CROSS JOIN v_target_today t
+LEFT JOIN kpi_mtd k on k.nik = s.nik and k.kpi = 'SALES'
+                   and k.periode = date_trunc('month', wib_today())::date
+WHERE s.snapshot_date = wib_today()
+  AND s.updated_at::date >= s.snapshot_date
+GROUP BY e.nik, e.nama, t.pct;
 
--- Comment to document purpose
-COMMENT ON VIEW public.v_top_seller IS 'Menampilkan top 10 seller hari ini yang datanya sudah diupdate pada hari snapshot_date (mencegah data lama terbawa dari snapshot tengah malam)';
+COMMENT ON VIEW public.v_top_seller IS 'Top seller hari ini dengan gap (sales - today_target). Filter updated_at untuk hindari data lama dari snapshot tengah malam.';
