@@ -35,9 +35,9 @@ export function unlockAudio() {
     });
   unlocked = true;
   try {
-    sessionStorage.setItem('j30e_audio_unlocked', '1');
+    localStorage.setItem('j30e_audio_unlocked', '1');
   } catch {
-    /* sessionStorage bisa gagal di mode privat — abaikan */
+    /* localStorage bisa gagal di mode privat — abaikan */
   }
 }
 
@@ -45,7 +45,7 @@ export function isAudioUnlocked(): boolean {
   if (unlocked) return true;
   if (typeof window === 'undefined') return false;
   try {
-    return sessionStorage.getItem('j30e_audio_unlocked') === '1';
+    return localStorage.getItem('j30e_audio_unlocked') === '1';
   } catch {
     return false;
   }

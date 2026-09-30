@@ -8,12 +8,35 @@ import { unlockAudio, isAudioUnlocked } from '@/lib/audio/cheer';
  * Tombol ini muncul sekali saat TV dinyalakan (atau tab dibuka ulang) —
  * setelah diklik sekali, breaking news berikutnya di sesi itu langsung
  * berbunyi tanpa perlu klik lagi.
+ *
+ * Auto-unlock pada interaksi pertama (click/tap/key) di halaman.
+ * Unlock state disimpan di localStorage, persist setelah reload.
  */
 export function AudioUnlockButton() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    setShow(!isAudioUnlocked());
+    const unlocked = isAudioUnlocked();
+    setShow(!unlocked);
+
+    // Auto-unlock pada interaksi pertama di halaman (click/tap/key)
+    if (!unlocked) {
+      const handler = () => {
+        unlockAudio();
+        setShow(false);
+        window.removeEventListener('click', handler);
+        window.removeEventListener('keydown', handler);
+        window.removeEventListener('touchstart', handler);
+      };
+      window.addEventListener('click', handler, { once: true });
+      window.addEventListener('keydown', handler, { once: true });
+      window.addEventListener('touchstart', handler, { once: true });
+      return () => {
+        window.removeEventListener('click', handler);
+        window.removeEventListener('keydown', handler);
+        window.removeEventListener('touchstart', handler);
+      };
+    }
   }, []);
 
   if (!show) return null;
