@@ -234,6 +234,7 @@ function syncSmtToday_() {
       nik: toNum_(r.nik),
       kode_dept: r.kode_dept,
       sales_today: toNum_(r.sales_today) || 0,
+      updated_at: new Date().toISOString(),
     }));
 
   logSkipped_('smt_today', skipped);
