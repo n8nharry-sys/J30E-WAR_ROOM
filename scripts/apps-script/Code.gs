@@ -101,6 +101,29 @@ function upsert_(table, rows, onConflict) {
   }
 }
 
+/** Hapus baris di tabel untuk snapshot_date hari ini (full replace per hari). */
+function deleteToday_(table) {
+  const { url, key } = cfg_();
+  if (!url || !key) {
+    throw new Error('SUPABASE_URL / SUPABASE_SERVICE_KEY belum diisi di Script Properties');
+  }
+  const snapshot_date = todayStr_();
+  const endpoint = url.replace(/\/$/, '') + '/rest/v1/' + table + '?snapshot_date=eq.' + snapshot_date;
+  const res = UrlFetchApp.fetch(endpoint, {
+    method: 'delete',
+    headers: {
+      apikey: key,
+      Authorization: 'Bearer ' + key,
+      Prefer: 'return=minimal',
+    },
+    muteHttpExceptions: true,
+  });
+  const code = res.getResponseCode();
+  if (code >= 300) {
+    throw new Error('Delete ' + table + ' gagal (' + code + '): ' + res.getContentText().slice(0, 300));
+  }
+}
+
 // ---------- Sinkronisasi per sheet ----------
 
 function syncStoreToday_() {
@@ -205,6 +228,10 @@ function logSkipped_(context, notes) {
  * API_dept SEBELUM dikirim: baris yang belum valid dilewati (tidak
  * menggagalkan baris lain) dan dicatat ke sheet "Sync_Log" supaya langsung
  * ketahuan NIK/kode_dept mana yang perlu dibereskan.
+ *
+ * UPDATE: Full replace per hari — hapus semua smt_daily hari ini dulu,
+ * lalu insert batch baru dari Google Sheets. Ini memastikan data lama tidak
+ * tertinggal di database ketika sheet diupdate.
  */
 function syncSmtToday_() {
   const rows = sheetRows_('API_smt_today');
@@ -238,7 +265,14 @@ function syncSmtToday_() {
     }));
 
   logSkipped_('smt_today', skipped);
-  upsert_('smt_daily', payload, 'snapshot_date,nik,kode_dept');
+  
+  // Full replace: hapus semua smt_daily hari ini dulu
+  deleteToday_('smt_daily');
+  
+  // Lalu insert batch baru
+  if (payload.length > 0) {
+    upsert_('smt_daily', payload, 'snapshot_date,nik,kode_dept');
+  }
 }
 
 function syncKpiMtd_() {
