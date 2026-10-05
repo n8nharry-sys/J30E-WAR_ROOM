@@ -62,23 +62,25 @@ export function useDashboardData() {
 
   useEffect(() => {
     refresh();
+    
+    // Debounce untuk mencegah multiple refresh dari realtime burst
+    let refreshTimeout: NodeJS.Timeout | null = null;
+    const debouncedRefresh = () => {
+      if (refreshTimeout) clearTimeout(refreshTimeout);
+      refreshTimeout = setTimeout(refresh, 1000);
+    };
+
+    // Subscribe hanya ke tabel pemicu utama (smt_daily & dept_daily)
+    // Tabel lain jarang berubah, tidak perlu trigger refresh tiap update
     const channel = supabaseBrowser
       .channel('dashboard-sync')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'store_daily' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'dept_daily' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'smt_daily' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'kpi_mtd' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'target_harian' }, refresh)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'running_text' }, refresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'smt_daily' }, debouncedRefresh)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'dept_daily' }, debouncedRefresh)
       .subscribe();
-
-    // Jaring pengaman: refresh tiap 60 detik kalau-kalau ada event realtime
-    // yang tidak sampai (jaringan TV kadang kurang stabil).
-    const poll = setInterval(refresh, 60000);
 
     return () => {
       supabaseBrowser.removeChannel(channel);
-      clearInterval(poll);
+      if (refreshTimeout) clearTimeout(refreshTimeout);
     };
   }, [refresh]);
 
