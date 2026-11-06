@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { PrayerCountdown } from './PrayerCountdown';
 
 export function Header() {
   const [now, setNow] = useState<Date | null>(null);
@@ -36,6 +37,8 @@ export function Header() {
         <p className="text-[9px] tracking-[.3em] text-mut">REAL-TIME PERFORMANCE MONITOR</p>
       </div>
       <div className="flex justify-end items-center gap-3">
+        <PrayerCountdown />
+        <div className="w-px h-8 bg-gray-300 dark:bg-gray-600" />
         <div className="text-right">
           <b className="text-xl tabular-nums">{time}</b>
           <small className="block text-mut text-[11px]">{date}</small>

@@ -10,7 +10,9 @@
   import { Derivatif } from '@/components/Derivatif';
   import { RunningText } from '@/components/RunningText';
   import { BreakingNewsOverlay } from '@/components/BreakingNewsOverlay';
+  import { PrayerOverlay } from '@/components/PrayerOverlay';
   import { AudioUnlockButton } from '@/components/AudioUnlockButton';
+
   import { useDashboardData } from '@/lib/useDashboardData';
 
   export default function DashboardPage() {
@@ -50,6 +52,7 @@
         </div>
 
         <BreakingNewsOverlay />
+        <PrayerOverlay />
         <AudioUnlockButton />
       </main>
     );

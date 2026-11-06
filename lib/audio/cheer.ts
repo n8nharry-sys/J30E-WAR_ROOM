@@ -61,3 +61,27 @@ export function playCheer() {
     /* browser mungkin masih menahan — tidak fatal, banner tetap tampil */
   });
 }
+
+let adzanEl: HTMLAudioElement | null = null;
+
+function getAdzanAudio(): HTMLAudioElement {
+  if (!adzanEl) {
+    adzanEl = new Audio('/sfx/adzan.mp3');
+    adzanEl.preload = 'auto';
+  }
+  return adzanEl;
+}
+
+/** Play adzan sound. Returns promise resolving to true if played, false if skipped/failed. */
+export function playAdzan(): Promise<boolean> {
+  if (!isAudioUnlocked()) return Promise.resolve(false);
+  const a = getAdzanAudio();
+  a.currentTime = 0;
+  a.volume = 0.7;
+  return a.play().then(() => true).catch(() => false);
+}
+
+/** Get adzan audio element for event listeners (e.g. 'ended'). */
+export function getAdzanElement(): HTMLAudioElement {
+  return getAdzanAudio();
+}

@@ -36,3 +36,12 @@ Buka `http://localhost:3000` untuk dashboard, dan `http://localhost:3000/admin` 
 ## Variabel lingkungan
 
 Lihat `.env.example`. `SUPABASE_SERVICE_ROLE_KEY` dan `ADMIN_PASSWORD` bersifat rahasia — jangan pernah commit ke Git atau expose ke browser.
+
+## Audio Files
+
+Dashboard menggunakan dua file audio di `public/sfx/`:
+
+- `applause.mp3` - Suara tepuk tangan untuk breaking news (sudah ada)
+- `adzan.mp3` - Suara adzan untuk notifikasi waktu sholat (**placeholder kosong - ganti dengan file adzan asli**)
+
+**Ganti `public/sfx/adzan.mp3` dengan rekaman adzan pilihan Anda (format MP3 disarankan).** File placeholder saat ini kosong dan tidak akan berbunyi.
