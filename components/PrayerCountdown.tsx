@@ -5,7 +5,7 @@ import { getTimes } from '@/lib/prayerTimes';
 import { usePrayer } from '@/contexts/PrayerContext';
 
 export function PrayerCountdown() {
-  const { setOverlayName } = usePrayer();
+  const { overlayName, setOverlayName } = usePrayer();
   const [nextPrayer, setNextPrayer] = useState<{
     name: string;
     time: Date;
@@ -29,6 +29,8 @@ export function PrayerCountdown() {
 
           if (remaining === 0 && !cancelled) {
             setOverlayName(name);
+            if (interval) clearInterval(interval);
+            setNextPrayer(null);
           }
         };
 
@@ -39,13 +41,16 @@ export function PrayerCountdown() {
       }
     }
 
-    init();
+    // Start or restart countdown only when overlay is closed
+    if (!overlayName) {
+      init();
+    }
 
     return () => {
       cancelled = true;
       if (interval) clearInterval(interval);
     };
-  }, [setOverlayName]);
+  }, [overlayName, setOverlayName]);
 
   if (error || !nextPrayer) return null;
 
