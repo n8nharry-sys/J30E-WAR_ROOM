@@ -18,7 +18,7 @@
   export default function DashboardPage() {
     const d = useDashboardData();
     return (
-      <main className="h-[100dvh] max-w-[1600px] mx-auto p-2 flex flex-col gap-2 overflow-hidden">
+      <main className="h-[100dvh] max-w-[1600px] mx-auto p-2 flex flex-col gap-2 overflow-y-auto">
         <div className="shrink-0">
           <Header />
         </div>

@@ -48,7 +48,7 @@ export function PrayerOverlay() {
       <div className="relative w-full max-w-md rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 p-8 shadow-2xl">
         <button
           onClick={() => setOverlayName(null)}
-          className="absolute top-4 right-4 text-2xl opacity-50 hover:opacity-100 transition-opacity"
+          className="absolute top-4 right-4 text-2xl opacity-50 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded-lg p-1"
           aria-label="Tutup"
         >
           ×

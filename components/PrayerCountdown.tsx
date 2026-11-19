@@ -41,7 +41,7 @@ export function PrayerCountdown() {
       }
     }
 
-    // Start or restart countdown only when overlay is closed
+    // Only start countdown if overlay is NOT currently open
     if (!overlayName) {
       init();
     }
@@ -59,7 +59,7 @@ export function PrayerCountdown() {
   const secs = nextPrayer.remaining % 60;
 
   return (
-    <div className="flex items-center gap-2">
+    <div role="status" aria-live="polite" className="flex items-center gap-2">
       <span className="text-base font-semibold whitespace-nowrap">Sholat {nextPrayer.name}</span>
       <span className="tabular-nums text-xl font-bold text-red-600 dark:text-red-500 whitespace-nowrap">-{String(hrs).padStart(2, '0')}:{String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}</span>
     </div>

@@ -23,7 +23,7 @@ export function Header() {
   }) ?? '';
 
   return (
-    <header className="card !p-2.5 grid grid-cols-3 items-center gap-3">
+    <header className="card p-2.5 grid grid-cols-3 items-center gap-3">
       <div>
         {/* Ganti /public/logo-informa.png dengan file logo resmi Informa x Java Mall.
             Ukuran dikecilkan (220x66 -> 170x51) supaya header tidak makan
@@ -43,7 +43,7 @@ export function Header() {
           <b className="text-xl tabular-nums">{time}</b>
           <small className="block text-mut text-[11px]">{date}</small>
         </div>
-        <div className="live !px-3 !py-1">LIVE</div>
+        <div className="live px-3 py-1">LIVE</div>
       </div>
     </header>
   );
